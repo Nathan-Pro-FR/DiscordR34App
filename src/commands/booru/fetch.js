@@ -2,6 +2,7 @@ import {
   SlashCommandBuilder,
   ApplicationIntegrationType,
   InteractionContextType,
+  AttachmentBuilder,
 } from 'discord.js';
 import { fetchPosts } from '../../services/rule34.js';
 
@@ -55,7 +56,7 @@ export async function execute(interaction) {
   const score = interaction.options.getInteger('score') ?? 100;
   const ai = interaction.options.getBoolean('ai') ?? false;
   const spoiler = interaction.options.getBoolean('spoiler') ?? true;
-
+  
   await interaction.deferReply();
 
   let posts;
@@ -73,11 +74,25 @@ export async function execute(interaction) {
     );
     return;
   }
-  
-  const content = posts
+  const urls = posts
     .map((post) => post.file_url || post.sample_url || post.preview_url)
-    .filter(Boolean)
-    .map((url) => (spoiler ? `|| ${url} ||` : url))
-    .join('\n');
-  
-  await interaction.editReply({ content: content || 'No media URLs found for these posts.' });
+    .filter(Boolean);
+
+  if (urls.length === 0) {
+    await interaction.editReply('⚠️ No media URLs found for these posts.');
+    return;
+  }
+  const attachments = urls.map((url) => {
+    const fileName = url.split('/').pop() || 'image.png'; 
+    
+    const attachment = new AttachmentBuilder(url, { name: fileName });
+    if (spoiler) {
+      attachment.setSpoiler(true);
+    }
+    
+    return attachment;
+  });
+  await interaction.editReply({ 
+    files: attachments 
+  });
+}
