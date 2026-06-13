@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { loadCommands } from './loadCommands.js';
-import express from 'express'; // 👈 Ajout de l'import Express
+import express from 'express'; 
 
-const { DISCORD_BOT_TOKEN, PORT } = process.env; // 👈 Récupération optionnelle du PORT de Render
+const { DISCORD_BOT_TOKEN, PORT } = process.env; 
 if (!DISCORD_BOT_TOKEN) {
   console.error('[❌ ERROR] : Le `DISCORD_BOT_TOKEN` est manquant dans le `.env` !');
   process.exit(1);
