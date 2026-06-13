@@ -1,26 +1,12 @@
 import 'dotenv/config';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { loadCommands } from './loadCommands.js';
-import express from 'express'; // 👈 Ajout de l'import Express
 
-const { DISCORD_BOT_TOKEN, PORT } = process.env; // 👈 Récupération optionnelle du PORT de Render
+const { DISCORD_BOT_TOKEN } = process.env;
 if (!DISCORD_BOT_TOKEN) {
   console.error('[❌ ERROR] : Le `DISCORD_BOT_TOKEN` est manquant dans le `.env` !');
   process.exit(1);
 }
-
-// ------------------ SERVEUR EXPRESS POUR RENDER ------------------
-const app = express();
-const serverPort = PORT || 8080; // Render injecte automatiquement une variable PORT
-
-app.get('/', (req, res) => {
-  res.send('⚙️ R34 Discord User App is online and healthy!');
-});
-
-app.listen(serverPort, () => {
-  console.log(`[🌐 SERVER] : Serveur d'écoute actif sur le port ${serverPort}`);
-});
-// ----------------------------------------------------------------
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const commands = await loadCommands();
