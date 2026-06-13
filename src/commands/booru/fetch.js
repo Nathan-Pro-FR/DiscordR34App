@@ -73,12 +73,11 @@ export async function execute(interaction) {
     );
     return;
   }
-
+  
   const content = posts
     .map((post) => post.file_url || post.sample_url || post.preview_url)
     .filter(Boolean)
     .map((url) => (spoiler ? `|| ${url} ||` : url))
     .join('\n');
-
+  
   await interaction.editReply({ content: content || 'No media URLs found for these posts.' });
-}
